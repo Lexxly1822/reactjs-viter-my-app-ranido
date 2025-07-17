@@ -10,7 +10,7 @@ const Footer = () => {
               <div className="flex items-center gap-2">
                 <img
                   className="size-8"
-                  src="../images/apple-touch-icon.webp"
+                  src="/apple-touch-icon.png"
                   alt="This blue circle image is represented as website'logo."
                 />
                 <span className="text-xl font-black text-white">MyApp</span>
