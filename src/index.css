@@ -57,6 +57,13 @@
   }
 }
 @layer components {
+  .page-container {
+    @apply flex flex-col min-h-screen;
+  }
+  .content-wrap {
+    /* @apply flex-1 */
+    flex: 1;
+  }
   .headerNav ul li:hover {
     @apply text-blue-500;
   }
