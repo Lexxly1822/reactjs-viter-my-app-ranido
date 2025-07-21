@@ -1,7 +1,20 @@
 import React from "react";
 import CardServices from "../../../../partials/CardServices";
+import useQueryData from "../../../../custom-hooks/useQueryData";
+import { apiVersion } from "../../../../helpers/function-general";
 
 const Services = () => {
+  const {
+    isLoading,
+    isFetching,
+    error,
+    data: dataServices,
+  } = useQueryData(
+    `${apiVersion}/controllers/developer/web-services/web-services.php`,
+    "get",
+    "web-services"
+  );
+
   return (
     <>
       <section id="services" className="ng-gray-50 py-12 md:py-20">
@@ -11,7 +24,14 @@ const Services = () => {
             <p>Professional solutions tailored to boost your online presence</p>
           </div>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-            <CardServices
+            {dataServices?.data.map((item, key) => {
+              return (
+                <React.Fragment key={key}>
+                  <CardServices item={item} />
+                </React.Fragment>
+              );
+            })}
+            {/* <CardServices
               img={"../images/card-icon-web-development.webp "}
               title={"Web Development "}
               description={
@@ -34,7 +54,7 @@ const Services = () => {
                 "Increase your visibility on search engines with our data-driven SEO strategies."
               }
               button={"Get Audit "}
-            />
+            /> */}
           </div>
         </div>
       </section>

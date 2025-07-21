@@ -2,11 +2,11 @@ import React from "react";
 import DashboardUpperNav from "../../../partials/DashboardUpperNav";
 import DashBoardSideNav from "../../../partials/DashBoardSideNav";
 import Header from "./header/Header";
-import Banner from "../../website/home/banner/Banner";
-import Services from "../../website/home/services/Services";
-import Testimonials from "../../website/home/testimonials/Testimonials";
-import About from "../../website/home/about/About";
-import GetInTouch from "../../website/home/getintouch/GetInTouch";
+import Banner from "../../developer/home/banner/Banner";
+import Services from "../../developer/home/services/Services";
+import Testimonials from "../../developer/home/testimonials/Testimonials";
+import About from "../../developer/home/about/About";
+import GetInTouch from "../../developer/home/getintouch/GetInTouch";
 import Footer from "./footer/Footer";
 
 const DashboardHome = () => {
