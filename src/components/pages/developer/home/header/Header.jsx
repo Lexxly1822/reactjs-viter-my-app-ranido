@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { apiVersion } from "../../../../helpers/function-generals";
+import useQueryData from "../../../../custom-hooks/useQueryData";
+import ModalAddHeader from "./ModalAddHeader";
+import { FaPen, FaPlus } from "react-icons/fa";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isModalHeader, setIsModalHeader] = React.useState(false);
+  const {
+    isLoading,
+    isFetching,
+    error,
+    data: dataServices,
+  } = useQueryData(
+    `${apiVersion}/controllers/developer/web-services/web-services.php`,
+    "get",
+    "web-services"
+  );
+
+  const handleAdd = () => {
+    setIsModalHeader(true);
+  };
+
   return (
     <>
+      {/* Header */}
       <header id="header" className="bg-white relative shadow-md w-full">
         <div className="container mx-auto px-4 py-7 flex justify-between items-center">
           {/* Logo */}
@@ -26,6 +47,15 @@ const Header = () => {
             <a href="#contact" className="hover:text-blue-500">
               Contact
             </a>
+            <button
+              onClick={handleAdd}
+              className="flex items-center gap-2 hover:underline hover:text-primary"
+              type="button"
+            >
+              {/* <span className="bg-primary text-white rounded-full "></span> */}
+              <FaPen className="size-3" />
+              Edit
+            </button>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -96,9 +126,19 @@ const Header = () => {
             >
               Contact
             </a>
+            <button
+              onClick={handleAdd}
+              className="flex items-center gap-2 hover:underline hover:text-primary"
+              type="button"
+            >
+              <FaPen className="size-3" />
+              Edit
+            </button>
           </div>
         )}
       </header>
+
+      {isModalHeader && <ModalAddHeader setIsModal={setIsModalHeader} />}
     </>
   );
 };
