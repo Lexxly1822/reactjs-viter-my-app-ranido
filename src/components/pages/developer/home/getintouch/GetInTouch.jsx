@@ -105,20 +105,20 @@ const GetInTouch = () => {
               </ul>
             </div>
 
-            <form className="bg-gray-50 rounded-xl p-8 h-fit md:w-1/2">
-              <div>
+            <form className="contact bg-gray-50 rounded-xl p-8 h-fit md:w-1/2">
+              <div className="relative mb-6">
                 <label>Full Name</label>
                 <input type="text" />
               </div>
-              <div>
+              <div className="relative mb-6">
                 <label>Email Address</label>
                 <input type="text" />
               </div>
-              <div>
-                <label>Message</label>
+              <div className="relative pt-1 ">
+                <label>Your Message</label>
                 <textarea rows="4"></textarea>
               </div>
-              <button className="btn btn--blue w-full">Send Message</button>
+              <button className=" btn btn--blue w-full  ">Send Message</button>
             </form>
           </div>
         </div>

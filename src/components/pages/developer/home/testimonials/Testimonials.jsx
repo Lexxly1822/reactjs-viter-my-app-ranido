@@ -1,21 +1,68 @@
 import React from "react";
-import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
-import CardTestimonials from "../../../../partials/CardTestimonials";
+import {
+  HiOutlineChevronLeft,
+  HiOutlineChevronRight,
+  HiPencil,
+} from "react-icons/hi";
+import ModalAddTestimonials from "./ModalAddTestimonials";
+import useQueryData from "../../../../custom-hooks/useQueryData";
 
 const Testimonials = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [
+    isModalTestimonials, //getter = get data
+    setIsModalTestimonials, //setter = set data
+  ] = React.useState(false);
+
+  const {
+    isLoading,
+    isFetching,
+    error,
+    data: dataTestimonials,
+  } = useQueryData(
+    `${apiVersion}/controllers/developer/testimonials/testimonials.php`,
+    "get",
+    "testimonials"
+  );
+
+  const handleAdd = () => {
+    setIsModalTestimonials(true);
+  };
+
   return (
     <>
       <section id="testimonials" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Client Testimonials
-          </h2>
+        <div className="container mx-auto px-4 ">
+          <div className=" flex justify-center items-center mb-4 gap-4">
+            <div>
+              <h2 className="text-3xl font-bold text-center">
+                Client Testimonials
+              </h2>
+            </div>
+
+            <button
+              className="tooltip"
+              data-tooltip="Add"
+              type="button"
+              onClick={handleAdd}
+            >
+              <HiPencil className="bg-primary text-white size-6 p-1 border transition-all ease-in-out duration-200 rounded-full" />
+            </button>
+          </div>
 
           {/* testimonials Slider */}
           <div className="relative max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+              {dataServices?.data.map((item, key) => {
+                return (
+                  <React.Fragment key={key}>
+                    <CardTestimonials item={item} />
+                  </React.Fragment>
+                );
+              })}
+            </div>
             {/* slides */}
-            <div className="overflow-hidden">
+            {/* <div className="overflow-hidden">
               <div
                 className="flex transition-transform duration-300 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -48,10 +95,10 @@ const Testimonials = () => {
                   position={"CMO, GrowthSolutions"}
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Navigation arrows */}
-            <button
+            {/* <button
               onClick={() =>
                 setCurrentSlide((prev) => (prev === 0 ? 2 : prev - 1))
               }
@@ -66,10 +113,10 @@ const Testimonials = () => {
               className="absolute right-0 top-1/2 -translate-y-1/2 ml-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
             >
               <HiOutlineChevronRight className="w-6 h-6text-gray-600" />
-            </button>
+            </button> */}
 
             {/* Dots Indicator */}
-            <div className="flex justify-center mt-6 space-x-2">
+            {/* <div className="flex justify-center mt-6 space-x-2">
               {[0, 1, 2].map((index) => (
                 <button
                   key={index}
@@ -79,10 +126,14 @@ const Testimonials = () => {
                   }`}
                 />
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </section>
+      {isModalTestimonials && (
+        <ModalAddTestimonials setIsModal={setIsModalTestimonials} />
+      )}
+      ;
     </>
   );
 };

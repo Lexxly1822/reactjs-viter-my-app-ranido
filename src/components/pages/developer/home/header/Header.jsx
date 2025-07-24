@@ -1,22 +1,27 @@
 import React, { useState } from "react";
-import { apiVersion } from "../../../../helpers/function-generals";
+// import { apiVersion } from "../../../../helpers/function-generals";
 import useQueryData from "../../../../custom-hooks/useQueryData";
 import ModalAddHeader from "./ModalAddHeader";
 import { FaPen, FaPlus } from "react-icons/fa";
+import { apiVersion } from "../../../../helpers/function-general";
+import { HiPencil } from "react-icons/hi";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isModalHeader, setIsModalHeader] = React.useState(false);
-  const {
-    isLoading,
-    isFetching,
-    error,
-    data: dataServices,
-  } = useQueryData(
-    `${apiVersion}/controllers/developer/web-services/web-services.php`,
-    "get",
-    "web-services"
-  );
+  const [isModalHeader, //getter = get data
+     setIsModalHeader, //setter = set data
+    ] = React.useState(false);
+
+  // const {
+  //   isLoading,
+  //   isFetching,
+  //   error,
+  //   data: dataServices,
+  // } = useQueryData(
+  //   `${apiVersion}/controllers/developer/header/web-services.php`,
+  //   "get",
+  //   "web-services"
+  // );
 
   const handleAdd = () => {
     setIsModalHeader(true);
@@ -34,7 +39,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex items-center space-x-6">
             <a href="#" className="hover:text-blue-500">
               Home
             </a>
@@ -47,15 +52,20 @@ const Header = () => {
             <a href="#contact" className="hover:text-blue-500">
               Contact
             </a>
-            <button
+            <button className="tooltip" data-tooltip="Add" type="button"
+             onClick={handleAdd}
+            >
+              <HiPencil className="bg-primary text-white size-6 p-1 border transition-all ease-in-out duration-200 rounded-full" />
+            </button>
+            {/* <button
               onClick={handleAdd}
               className="flex items-center gap-2 hover:underline hover:text-primary"
               type="button"
             >
               {/* <span className="bg-primary text-white rounded-full "></span> */}
-              <FaPen className="size-3" />
-              Edit
-            </button>
+            {/* <FaPen className="size-3" />
+              Edit */}
+            {/* </button> */}
           </nav>
 
           {/* Mobile Menu Button */}
