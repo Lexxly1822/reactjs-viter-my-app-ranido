@@ -10,21 +10,32 @@ import { FaTimes } from "react-icons/fa";
 import { InputText, InputTextArea } from "../../../../helpers/FormInputs";
 
 //setIsmodal nag c-close
-const ModalAddHeader = ({ setIsModal }) => {
+const ModalAddHeader = ({ setIsModal, itemEdit }) => {
   const [animate, setAnimate] = React.useState("translate-x-full");
   const queryClient = useQueryClient();
+  console.log(itemEdit);
+
   const mutation = useMutation({
     mutationFn: (values) =>
       queryData(
-        `${apiVersion}/controllers/developer/header/header.php`,
-        "post", //CREATE
+        itemEdit
+          ? `${apiVersion}/controllers/developer/header/header.php?id=${itemEdit.header_aid}`
+          : `${apiVersion}/controllers/developer/header/header.php
+            `,
+        itemEdit
+          ? "put" //update
+          : "post", //create
         values
       ),
     onSuccess: (data) => {
-      if (data.success) {
-        alert("Successfully Created.");
+      //validate reading
+      queryClient.invalidateQueries({ queryKey: ["header"] }); // give id for refetching data.
+
+      if (!data.success) {
+        window.prompt(data.error);
       } else {
-        alert(data.error);
+        window.prompt(`Successfully created.`);
+        setIsModal(false);
       }
     },
   });
@@ -38,7 +49,10 @@ const ModalAddHeader = ({ setIsModal }) => {
     }, 200);
   };
 
-  const initVal = { header_name: "", header_link: "" };
+  const initVal = {
+    header_name: itemEdit ? itemEdit.header_name : "",
+    header_link: itemEdit ? itemEdit.header_link : "",
+  };
 
   const yupSchema = Yup.object({
     header_name: Yup.string().required("required"),
@@ -54,7 +68,7 @@ const ModalAddHeader = ({ setIsModal }) => {
     <>
       <ModalWrapper className={`${animate}`} handleClose={handleClose}>
         <div className="modal_header relative mb-4">
-          <h3 className="text-sm">Add Header</h3>
+          <h3 className="text-sm">{itemEdit ? "Edit" : "Add"} Header</h3>
           <button
             className="absolute  top-0.5 right-0"
             type="button"
@@ -102,7 +116,11 @@ const ModalAddHeader = ({ setIsModal }) => {
                       disabled={mutation.isPending}
                       className="btn-modal-submit"
                     >
-                      {mutation.isPending ? "Loading..." : "Add"}
+                      {mutation.isPending
+                        ? "Loading..."
+                        : itemEdit
+                        ? "Save"
+                        : "Add"}
                     </button>
                     <button
                       type="reset"

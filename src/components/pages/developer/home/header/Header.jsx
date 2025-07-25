@@ -5,25 +5,34 @@ import ModalAddHeader from "./ModalAddHeader";
 import { FaPen, FaPlus } from "react-icons/fa";
 import { apiVersion } from "../../../../helpers/function-general";
 import { HiPencil } from "react-icons/hi";
+import { FaPencil } from "react-icons/fa6";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [isModalHeader, //getter = get data
-     setIsModalHeader, //setter = set data
-    ] = React.useState(false);
+  const [
+    isModalHeader, //getter = get data
+    setIsModalHeader, //setter = set data
+  ] = React.useState(false);
+  const [itemEdit, setItemEdit] = React.useState();
 
-  // const {
-  //   isLoading,
-  //   isFetching,
-  //   error,
-  //   data: dataServices,
-  // } = useQueryData(
-  //   `${apiVersion}/controllers/developer/header/web-services.php`,
-  //   "get",
-  //   "web-services"
-  // );
+  const {
+    isLoading,
+    isFetching,
+    error,
+    data: dataHeader,
+  } = useQueryData(
+    `${apiVersion}/controllers/developer/header/header.php`,
+    "get",
+    "header"
+  );
 
   const handleAdd = () => {
+    setItemEdit(null);
+    setIsModalHeader(true);
+  };
+
+  const handleEdit = (item) => {
+    setItemEdit(item);
     setIsModalHeader(true);
   };
 
@@ -39,8 +48,20 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <a href="#" className="hover:text-blue-500">
+          <nav className="hidden md:flex items-center space-x-6 ">
+            {dataHeader?.data.map((item, key) => {
+              return (
+                <a
+                  href={item.header_link}
+                  className="hover:text-blue-500"
+                  key={key}
+                  onClick={() => handleEdit(item)}
+                >
+                  {item.header_name}
+                </a>
+              );
+            })}
+            {/* <a href="#" className="hover:text-blue-500">
               Home
             </a>
             <a href="#about" className="hover:text-blue-500">
@@ -49,11 +70,14 @@ const Header = () => {
             <a href="#services" className="hover:text-blue-500">
               Services
             </a>
-            <a href="#contact" className="hover:text-blue-500">
+            <a href="#getintouch" className="hover:text-blue-500">
               Contact
-            </a>
-            <button className="tooltip" data-tooltip="Add" type="button"
-             onClick={handleAdd}
+            </a> */}
+            <button
+              className="tooltip"
+              data-tooltip="Add"
+              type="button"
+              onClick={handleAdd}
             >
               <HiPencil className="bg-primary text-white size-6 p-1 border transition-all ease-in-out duration-200 rounded-full" />
             </button>
@@ -131,7 +155,7 @@ const Header = () => {
             </a>
             <a
               onClick={() => setIsMenuOpen(false)}
-              href="#contact"
+              href="#getintouch"
               className="block py-2 hover:text-blue-500"
             >
               Contact
@@ -148,7 +172,9 @@ const Header = () => {
         )}
       </header>
 
-      {isModalHeader && <ModalAddHeader setIsModal={setIsModalHeader} />}
+      {isModalHeader && (
+        <ModalAddHeader setIsModal={setIsModalHeader} itemEdit={itemEdit} />
+      )}
     </>
   );
 };

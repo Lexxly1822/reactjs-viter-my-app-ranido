@@ -23,6 +23,19 @@ class Testimonials
         $this->tblTestimonials = 'my_app_testimonials'; //table
 
     }
+    public function readAll()
+    {
+        try {
+            $sql = "select ";
+            $sql .= "* ";
+            $sql .= "from ";
+            $sql .= "{$this->tblTestimonials} ";
+            $query = $this->connection->query($sql);
+        } catch (PDOException $ex) {
+            $query = false;
+        }
+        return $query;
+    }
     //creating data using this function
     public function create()
     {
@@ -53,7 +66,6 @@ class Testimonials
                 "testimonials_updated" => $this->testimonials_updated,
             ]); //to run this sql
             $this->lastInsertedId = $this->connection->lastInsertId();
-            
         } catch (PDOException $ex) {
             returnError($ex);
             $query = false;

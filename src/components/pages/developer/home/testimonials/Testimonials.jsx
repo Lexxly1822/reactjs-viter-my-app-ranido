@@ -6,6 +6,8 @@ import {
 } from "react-icons/hi";
 import ModalAddTestimonials from "./ModalAddTestimonials";
 import useQueryData from "../../../../custom-hooks/useQueryData";
+import { apiVersion } from "../../../../helpers/function-general";
+import CardTestimonials from "../../../../partials/CardTestimonials";
 
 const Testimonials = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -52,15 +54,22 @@ const Testimonials = () => {
 
           {/* testimonials Slider */}
           <div className="relative max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-              {dataServices?.data.map((item, key) => {
-                return (
-                  <React.Fragment key={key}>
-                    <CardTestimonials item={item} />
-                  </React.Fragment>
-                );
-              })}
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-300 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {" "}
+                {dataTestimonials?.data.map((item, key) => {
+                  return (
+                    <React.Fragment key={key}>
+                      <CardTestimonials item={item} />
+                    </React.Fragment>
+                  );
+                })}
+              </div>
             </div>
+
             {/* slides */}
             {/* <div className="overflow-hidden">
               <div
@@ -98,9 +107,11 @@ const Testimonials = () => {
             </div> */}
 
             {/* Navigation arrows */}
-            {/* <button
+            <button
               onClick={() =>
-                setCurrentSlide((prev) => (prev === 0 ? 2 : prev - 1))
+                setCurrentSlide((prev) =>
+                  prev === 0 ? dataTestimonials.count - 1 : prev - 1
+                )
               }
               className="absolute left-0 top-1/2 -translate-y-1/2 ml-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
             >
@@ -108,16 +119,18 @@ const Testimonials = () => {
             </button>
             <button
               onClick={() =>
-                setCurrentSlide((prev) => (prev === 2 ? 0 : prev + 1))
+                setCurrentSlide((prev) =>
+                  prev == dataTestimonials.count - 1 ? 0 : prev + 1
+                )
               }
               className="absolute right-0 top-1/2 -translate-y-1/2 ml-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
             >
               <HiOutlineChevronRight className="w-6 h-6text-gray-600" />
-            </button> */}
+            </button>
 
             {/* Dots Indicator */}
-            {/* <div className="flex justify-center mt-6 space-x-2">
-              {[0, 1, 2].map((index) => (
+            <div className="flex justify-center mt-6 space-x-2">
+              {dataTestimonials?.data.map((item, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
@@ -126,7 +139,7 @@ const Testimonials = () => {
                   }`}
                 />
               ))}
-            </div> */}
+            </div>
           </div>
         </div>
       </section>

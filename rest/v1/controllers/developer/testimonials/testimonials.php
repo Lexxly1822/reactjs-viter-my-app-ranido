@@ -15,6 +15,12 @@ if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         sendResponse($result);
         exit;
     }
+    //get = read
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        $result = require 'read.php';
+        sendResponse($result);
+        exit;
+    }
 }
 
 checkEndpoint();

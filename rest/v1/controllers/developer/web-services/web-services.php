@@ -22,4 +22,10 @@ if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
         sendResponse($result);
         exit;
     }
+    //put = update
+    if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+        $result = require 'update.php';
+        sendResponse($result);
+        exit;
+    }
 }

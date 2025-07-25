@@ -4,9 +4,11 @@ import useQueryData from "../../../../custom-hooks/useQueryData";
 import { apiVersion } from "../../../../helpers/function-general";
 import { FaPlus } from "react-icons/fa";
 import ModalAddServices from "./ModalAddServices";
+import { FaPencil } from "react-icons/fa6";
 
 const Services = () => {
   const [isModalServices, setIsModalServices] = React.useState(false);
+  const [itemEdit, setItemEdit] = React.useState();
 
   const {
     isLoading,
@@ -20,6 +22,12 @@ const Services = () => {
   );
 
   const handleAdd = () => {
+    setItemEdit(null);
+    setIsModalServices(true);
+  };
+
+  const handleEdit = (item) => {
+    setItemEdit(item);
     setIsModalServices(true);
   };
 
@@ -49,19 +57,33 @@ const Services = () => {
               </div>
             </div>
           </div>
+          {/* hgf */}
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
             {dataServices?.data.map((item, key) => {
               return (
-                <React.Fragment key={key}>
+                <div key={key} className="relative">
+                  <div className="absolute -top-5 right-3">
+                    {" "}
+                    <button
+                      type="button"
+                      data-tooltip="Edit"
+                      className=" text-white tooltip"
+                      onClick={() => handleEdit(item)}
+                    >
+                      <FaPencil className="p-1 bg-primary rounded-full" />
+                    </button>
+                  </div>
                   <CardServices item={item} />
-                </React.Fragment>
+                </div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {isModalServices && <ModalAddServices setIsModal={setIsModalServices}/>}
+      {isModalServices && (
+        <ModalAddServices setIsModal={setIsModalServices} itemEdit={itemEdit} />
+      )}
     </>
   );
 };
