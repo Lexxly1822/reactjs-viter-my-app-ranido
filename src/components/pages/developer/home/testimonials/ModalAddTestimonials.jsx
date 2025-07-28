@@ -8,13 +8,15 @@ import { InputText, InputTextArea } from "../../../../helpers/FormInputs";
 import ModalWrapper from "../../../../partials/modal/ModalWrapper";
 import { apiVersion } from "../../../../helpers/function-general";
 
-const ModalAddTestimonials = ({ setIsModal }) => {
+const ModalAddTestimonials = ({ setIsModal, itemEdit }) => {
   const [animate, setAnimate] = React.useState("translate-x-full");
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (values) =>
       queryData(
+        
         `${apiVersion}/controllers/developer/testimonials/testimonials.php`,
+
         "post", //CREATE
         values
       ),
@@ -37,10 +39,10 @@ const ModalAddTestimonials = ({ setIsModal }) => {
   };
 
   const initVal = {
-    testimonials_name: "",
-    testimonials_image: "",
-    testimonials_description: "",
-    testimonials_position: "",
+    testimonials_name: itemEdit ? itemEdit.testimonials_name : "",
+    testimonials_image: itemEdit ? itemEdit.testimonials_image : "",
+    testimonials_description: itemEdit ? itemEdit.testimonials_description : "",
+    testimonials_position: itemEdit ? itemEdit.testimonials_position : "",
   };
 
   const yupSchema = Yup.object({
@@ -58,7 +60,7 @@ const ModalAddTestimonials = ({ setIsModal }) => {
     <>
       <ModalWrapper className={`${animate}`} handleClose={handleClose}>
         <div className="modal_header relative mb-4">
-          <h3 className="text-sm">Add Testimonials</h3>
+          <h3 className="text-sm">Edit Testimonials</h3>
           <button
             className="absolute top-0.5 right-0"
             type="button"
@@ -120,7 +122,7 @@ const ModalAddTestimonials = ({ setIsModal }) => {
                   disabled={mutation.isPending}
                   className="btn-modal-submit"
                 >
-                  {mutation.isPending ? "Loading..." : "Add"}
+                  {mutation.isPending ? "Loading..." : "Save"}
                 </button>
                 <button
                   type="reset"

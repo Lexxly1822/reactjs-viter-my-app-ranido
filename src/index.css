@@ -88,6 +88,21 @@
   span.error-show {
     @apply text-[9px] text-red-600 absolute -bottom-5 right-0;
   }
+  table {
+    @apply border-collapse border-spacing-2 text-left w-full table-auto;
+  }
+  table tr:hover {
+    @apply bg-gray-100;
+  }
+  table tr {
+    @apply border-b border-solid rounded-t-md border-gray-300;
+  }
+  table th {
+    @apply font-bold bg-gray-200 py-1 pr-3 capitalize text-sm;
+  }
+  table td {
+    @apply py-2 pr-3 text-xs;
+  }
 }
 @layer components {
   .btn-modal-submit {
@@ -200,14 +215,13 @@
 }
 
 @layer utilities {
-  .tooltip{
+  .tooltip {
     @apply relative p-1 bg-transparent leading-none z-20;
   }
-  .tooltip::after{
+  .tooltip::after {
     @apply content-[attr(data-tooltip)] absolute -translate-x-1/2 bottom-full -top-6 bg-dark/80 text-white p-1 rounded-sm h-fit leading-none z-20 text-center opacity-0 text-[10px] pointer-events-none transition ease-linear scale-0 duration-75 left-1/2;
-  
   }
-  .tooltip:hover::after{
+  .tooltip:hover::after {
     @apply opacity-100 scale-100;
   }
 }

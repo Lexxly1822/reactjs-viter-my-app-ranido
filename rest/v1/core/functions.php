@@ -125,6 +125,28 @@ function returnSuccess($model, $name, $query, $data = '')
     $response->send();
     exit;
 }
+// 7
+function checkId($id)
+{
+    $response = new Response();
+    if ($id == '' || !is_numeric($id)) {
+        $response->setSuccess(false);
+        $error = [];
+        $error['code'] = '400';
+        $error['error'] = ' ID cannot ble blank or must be numeric';
+        $error['success'] = false;
+        $response->setData($error);
+        $response->send();
+        exit;
+    }
+}
+
+function checkDelete($model)
+{
+    $query = $model->delete();
+    checkQuery($query, "There's something wrong with models (delete)");
+    return $query;
+}
 
 function checkCreate($models)
 {

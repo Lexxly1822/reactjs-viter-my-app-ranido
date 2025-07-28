@@ -3,11 +3,16 @@ import {
   HiOutlineChevronLeft,
   HiOutlineChevronRight,
   HiPencil,
+  HiPlus,
 } from "react-icons/hi";
 import ModalAddTestimonials from "./ModalAddTestimonials";
 import useQueryData from "../../../../custom-hooks/useQueryData";
 import { apiVersion } from "../../../../helpers/function-general";
 import CardTestimonials from "../../../../partials/CardTestimonials";
+import ModalDeleteTestimonials from "./ModalDeleteTestimonials";
+import { FaList, FaPlus, FaTable } from "react-icons/fa";
+import TestimonialsList from "./TestimonialsList";
+import TestimonialsTable from "./TestimonialsTable";
 
 const Testimonials = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
@@ -15,7 +20,9 @@ const Testimonials = () => {
     isModalTestimonials, //getter = get data
     setIsModalTestimonials, //setter = set data
   ] = React.useState(false);
-
+  const [isDeleteTestimonials, setIsDeleteTestimonials] = React.useState(false);
+  const [itemEdit, setItemEdit] = React.useState();
+  const [isTable, setIsTable] = React.useState(false);
   const {
     isLoading,
     isFetching,
@@ -26,8 +33,21 @@ const Testimonials = () => {
     "get",
     "testimonials"
   );
+  console.log(isTable);
+
+  const handleToggleTable = () => {
+    setIsTable(!isTable);
+  };
+  const handleDelete = (item) => {
+    setItemEdit(item);
+    setIsDeleteTestimonials(true);
+  };
 
   const handleAdd = () => {
+    setIsModalTestimonials(true);
+  };
+  const handleEdit = (item) => {
+    setItemEdit(item);
     setIsModalTestimonials(true);
   };
 
@@ -41,37 +61,62 @@ const Testimonials = () => {
                 Client Testimonials
               </h2>
             </div>
+            <button //9
+              className="flex items-center gap-2 hover:underline hover:text-primary"
+              type="button"
+              onClick={handleToggleTable}
+            >
+              {isTable == true ? ( //15
+                <>
+                  <FaList className="size-3" />
+                  List{" "}
+                </>
+              ) : (
+                <>
+                  <FaTable className="size-3" /> Table
+                </>
+              )}
+            </button>
 
             <button
-              className="tooltip"
+              className="tooltip flex gap-1"
               data-tooltip="Add"
               type="button"
               onClick={handleAdd}
             >
-              <HiPencil className="bg-primary text-white size-6 p-1 border transition-all ease-in-out duration-200 rounded-full" />
+              <FaPlus className="size-3" /> Add
             </button>
           </div>
 
           {/* testimonials Slider */}
-          <div className="relative max-w-4xl mx-auto">
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-300 ease-in-out"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-              >
-                {" "}
-                {dataTestimonials?.data.map((item, key) => {
-                  return (
-                    <React.Fragment key={key}>
-                      <CardTestimonials item={item} />
-                    </React.Fragment>
-                  );
-                })}
-              </div>
-            </div>
+          {isTable == true ? (
+            <>
+              <TestimonialsTable //13
+                isLoading={isLoading}
+                isFetching={isFetching}
+                error={error}
+                dataTestimonials={dataTestimonials}
+                handleAdd={handleAdd}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            </>
+          ) : (
+            <TestimonialsList
+              isLoading={isLoading}
+              isFetching={isFetching}
+              error={error}
+              dataTestimonials={dataTestimonials}
+              handleAdd={handleAdd}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+              currentSlide={currentSlide}
+              setCurrentSlide={setCurrentSlide}
+            />
+          )}
 
-            {/* slides */}
-            {/* <div className="overflow-hidden">
+          {/* slides */}
+          {/* <div className="overflow-hidden">
               <div
                 className="flex transition-transform duration-300 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -105,46 +150,17 @@ const Testimonials = () => {
                 />
               </div>
             </div> */}
-
-            {/* Navigation arrows */}
-            <button
-              onClick={() =>
-                setCurrentSlide((prev) =>
-                  prev === 0 ? dataTestimonials.count - 1 : prev - 1
-                )
-              }
-              className="absolute left-0 top-1/2 -translate-y-1/2 ml-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
-            >
-              <HiOutlineChevronLeft className="w-6 h-6text-gray-600" />
-            </button>
-            <button
-              onClick={() =>
-                setCurrentSlide((prev) =>
-                  prev == dataTestimonials.count - 1 ? 0 : prev + 1
-                )
-              }
-              className="absolute right-0 top-1/2 -translate-y-1/2 ml-4 bg-white p-2 rounded-full shadow-md hover:bg-gray-100"
-            >
-              <HiOutlineChevronRight className="w-6 h-6text-gray-600" />
-            </button>
-
-            {/* Dots Indicator */}
-            <div className="flex justify-center mt-6 space-x-2">
-              {dataTestimonials?.data.map((item, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`w-3 h-3 rounded-full ${
-                    currentSlide === index ? "bg-blue-600" : "bg-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
         </div>
       </section>
       {isModalTestimonials && (
         <ModalAddTestimonials setIsModal={setIsModalTestimonials} />
+      )}
+      {isDeleteTestimonials && (
+        <ModalDeleteTestimonials
+          setModalDelete={setIsDeleteTestimonials}
+          mysqlEndpoint={`${apiVersion}/controllers/developer/testimonials/testimonials.php?id=${itemEdit.web_services_aid}`}
+          queryKey="testimonials"
+        />
       )}
       ;
     </>
