@@ -6,15 +6,15 @@ $conn = null;
 $conn = checkDatabaseConnection();
 
 //use model 
-$Testimonials = new Testimonials($conn);
+$testimonials = new Testimonials($conn);
 
 if (array_key_exists('id', $_GET)) {
-    $Testimonials->testimonials_aid = $_GET['id'];
+    $testimonials->testimonials_aid = $_GET['id'];
 
-    checkId($Testimonials->testimonials_aid);
-    $query = checkDelete($Testimonials);
+    checkId($testimonials->testimonials_aid);
+    $query = checkDelete($testimonials);
     http_response_code(200);
-    returnSuccess($Testimonials, 'web sevices delete', $query);
+    returnSuccess($testimonials, 'testimonials delete', $query);
 }
 
 checkEndpoint();

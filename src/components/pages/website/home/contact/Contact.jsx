@@ -1,6 +1,6 @@
 import React from "react";
 
-const GetInTouch = () => {
+const Contact = () => {
   return (
     <>
       <section id="contact" className="bg-white py-12 md:py-20">
@@ -127,4 +127,4 @@ const GetInTouch = () => {
   );
 };
 
-export default GetInTouch;
+export default Contact;

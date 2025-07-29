@@ -26,6 +26,8 @@ const Services = () => {
     "get", //post
     "web-services" //query key
   );
+
+  
   console.log(isTable);
 
   const handleToggleTable = () => {

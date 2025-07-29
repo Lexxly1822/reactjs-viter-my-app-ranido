@@ -44,6 +44,7 @@ const Testimonials = () => {
   };
 
   const handleAdd = () => {
+    setItemEdit(null);
     setIsModalTestimonials(true);
   };
   const handleEdit = (item) => {
@@ -53,39 +54,43 @@ const Testimonials = () => {
 
   return (
     <>
-      <section id="testimonials" className="py-16 bg-gray-50">
+      <section id="testimonials" className="py-16 bg-gray-50 md:py-20">
         <div className="container mx-auto px-4 ">
-          <div className=" flex justify-center items-center mb-4 gap-4">
+          <div className="relative  flex justify-center items-center mb-4 gap-4 top-0">
             <div>
-              <h2 className="text-3xl font-bold text-center">
+              <h2 className="text-3xl font-bold text-center right-5">
                 Client Testimonials
               </h2>
             </div>
-            <button //9
-              className="flex items-center gap-2 hover:underline hover:text-primary"
-              type="button"
-              onClick={handleToggleTable}
-            >
-              {isTable == true ? ( //15
-                <>
-                  <FaList className="size-3" />
-                  List{" "}
-                </>
-              ) : (
-                <>
-                  <FaTable className="size-3" /> Table
-                </>
-              )}
-            </button>
+            <div className="absolute right-0 top-1/3">
+              <div className="flex items-center gap-x-3">
+                <button //9
+                  className="flex items-center gap-2 hover:underline hover:text-primary"
+                  type="button"
+                  onClick={handleToggleTable}
+                >
+                  {isTable == true ? ( //15
+                    <>
+                      <FaList className="size-3 " />
+                      List{" "}
+                    </>
+                  ) : (
+                    <>
+                      <FaTable className="size-3" /> Table
+                    </>
+                  )}
+                </button>
 
-            <button
-              className="tooltip flex gap-1"
-              data-tooltip="Add"
-              type="button"
-              onClick={handleAdd}
-            >
-              <FaPlus className="size-3" /> Add
-            </button>
+                <button
+                  className="tooltip flex gap-1"
+                  data-tooltip="Add"
+                  type="button"
+                  onClick={handleAdd}
+                >
+                  <FaPlus className="size-3" /> Add
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* testimonials Slider */}
@@ -153,16 +158,19 @@ const Testimonials = () => {
         </div>
       </section>
       {isModalTestimonials && (
-        <ModalAddTestimonials setIsModal={setIsModalTestimonials} />
+        <ModalAddTestimonials
+          setIsModal={setIsModalTestimonials}
+          itemEdit={itemEdit}
+        />
       )}
       {isDeleteTestimonials && (
         <ModalDeleteTestimonials
           setModalDelete={setIsDeleteTestimonials}
-          mysqlEndpoint={`${apiVersion}/controllers/developer/testimonials/testimonials.php?id=${itemEdit.web_services_aid}`}
+          setCurrentSlide={setCurrentSlide}
+          mysqlEndpoint={`${apiVersion}/controllers/developer/testimonials/testimonials.php?id=${itemEdit.testimonials_aid}`}
           queryKey="testimonials"
         />
       )}
-      ;
     </>
   );
 };

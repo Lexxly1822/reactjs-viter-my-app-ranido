@@ -18,7 +18,7 @@ const ServicesList = ({
         {dataServices?.data.map((item, key) => {
           return (
             <div key={key} className="relative">
-              <div className="absolute top-5 right-3">
+              <div className="absolute -top-5 right-3">
                 {" "}
                 <button
                   type="button"

@@ -6,7 +6,7 @@ import Banner from "../../developer/home/banner/Banner";
 import Services from "../../developer/home/services/Services";
 import Testimonials from "../../developer/home/testimonials/Testimonials";
 import About from "../../developer/home/about/About";
-import GetInTouch from "../../developer/home/getintouch/GetInTouch";
+import GetInTouch from "./contact/Contact";
 import Footer from "./footer/Footer";
 
 const DashboardHome = () => {

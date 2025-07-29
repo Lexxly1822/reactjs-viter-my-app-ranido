@@ -133,7 +133,7 @@ function checkId($id)
         $response->setSuccess(false);
         $error = [];
         $error['code'] = '400';
-        $error['error'] = ' ID cannot ble blank or must be numeric';
+        $error['error'] = ' ID cannot be blank or must be numeric';
         $error['success'] = false;
         $response->setData($error);
         $response->send();

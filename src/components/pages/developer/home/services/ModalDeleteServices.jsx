@@ -26,6 +26,7 @@ const ModalDeleteServices = ({ setModalDelete, mysqlEndpoint, queryKey }) => {
   const handleConfirm = () => {
     mutation.mutate();
   };
+  
   return (
     <>
       <div className="fixed top-0 left-0 h-screen w-full flex justify-center items-center z-50">

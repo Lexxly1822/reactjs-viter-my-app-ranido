@@ -11,20 +11,27 @@ import { apiVersion } from "../../../../helpers/function-general";
 const ModalAddTestimonials = ({ setIsModal, itemEdit }) => {
   const [animate, setAnimate] = React.useState("translate-x-full");
   const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: (values) =>
       queryData(
-        
-        `${apiVersion}/controllers/developer/testimonials/testimonials.php`,
-
-        "post", //CREATE
+        itemEdit
+          ? `${apiVersion}/controllers/developer/testimonials/testimonials.php?id=${itemEdit.testimonials_aid}`
+          : `${apiVersion}/controllers/developer/testimonials/testimonials.php
+          `,
+        itemEdit
+          ? "put" //update
+          : "post", //create
         values
       ),
     onSuccess: (data) => {
-      if (data.success) {
-        alert("Successfully Created.");
+      queryClient.invalidateQueries({ queryKey: ["testimonials"] });
+
+      if (!data.success) {
+        window.prompt(data.error);
       } else {
-        alert(data.error);
+        window.prompt(`Successfully created.`);
+        setIsModal(false);
       }
     },
   });
@@ -60,9 +67,9 @@ const ModalAddTestimonials = ({ setIsModal, itemEdit }) => {
     <>
       <ModalWrapper className={`${animate}`} handleClose={handleClose}>
         <div className="modal_header relative mb-4">
-          <h3 className="text-sm">Edit Testimonials</h3>
+          <h3 className="text-sm"> {itemEdit ? "Edit" : "Add"} Testimonials</h3>
           <button
-            className="absolute top-0.5 right-0"
+            className="absolute top-0.5 right-5"
             type="button"
             onClick={handleClose}
           >
