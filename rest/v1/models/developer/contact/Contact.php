@@ -3,7 +3,6 @@ class Contact
 {
     //COLOUM
     public $contact_aid; //coloum
-    public $contact_is_active;
     public $contact_fullname;
     public $contact_email;
     public $contact_message;
@@ -40,13 +39,11 @@ class Contact
     {
         try {
             $sql = "insert into {$this->tblContact} ( ";
-            $sql .= "contact_is_active, "; //kung anong value i-insert
             $sql .= "contact_fullname, ";
             $sql .= "contact_email, ";
             $sql .= "contact_message, ";
             $sql .= "contact_created, ";
             $sql .= "contact_updated ) values ( ";
-            $sql .= ":contact_is_active, ";
             $sql .= ":contact_fullname, ";
             $sql .= ":contact_email, ";
             $sql .= ":contact_message, ";
@@ -54,7 +51,6 @@ class Contact
             $sql .= ":contact_updated ) ";
             $query = $this->connection->prepare($sql); //to ready your query
             $query->execute([
-                "contact_is_active" => $this->contact_is_active, //kung anong meron sa try meron din dito
                 "contact_fullname" => $this->contact_fullname,
                 "contact_email" => $this->contact_email,
                 "contact_message" => $this->contact_message,

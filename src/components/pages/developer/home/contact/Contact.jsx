@@ -7,7 +7,7 @@ import { apiVersion } from "../../../../helpers/function-general";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { InputText } from "../../../../helpers/FormInputs";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryData } from "../../../../custom-hooks/queryData";
 
 const Contact = () => {
@@ -16,6 +16,7 @@ const Contact = () => {
   const [itemEdit, setItemEdit] = React.useState();
   const [isTable, setIsTable] = React.useState(false); //10
 
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (values) =>
       queryData(
@@ -35,7 +36,7 @@ const Contact = () => {
         window.prompt(data.error);
       } else {
         window.prompt(`Successfully created.`);
-        setIsModal(false);
+        // setIsModal(false);
       }
     },
   });
@@ -58,7 +59,7 @@ const Contact = () => {
   };
 
   const yupSchema = Yup.object({
-    contact_name: Yup.string().required("required"),
+    contact_fullname: Yup.string().required("required"),
   });
   console.log(isTable);
 
@@ -186,7 +187,7 @@ const Contact = () => {
             </div>
 
             <div className="contact bg-gray-50 rounded-xl p-8 h-fit md:w-1/2">
-              <div className="-right-44 relative w-full -top-3 ">
+              <div className=" -right-[34rem] relative w-full -top-14 ">
                 <div className="">
                   <button //9
                     className="flex items-center gap-2 hover:underline hover:text-primary"
@@ -217,43 +218,47 @@ const Contact = () => {
                     mutation.mutate(values);
                   }}
                 >
-                  <Form>
-                    <div className="modal-overflow">
-                      <div className="relative mt-3 mb-5">
-                        <InputText
-                          label="Full Name"
-                          name="contact_fullname"
-                          type="text"
-                          disabled={mutation.isPending}
-                        />
-                      </div>
-                      <div className="relative mt-3 mb-5">
-                        <InputText
-                          label="Email Address"
-                          name="contact_email"
-                          type="text"
-                          disabled={mutation.isPending}
-                        />
-                      </div>
-                      <div className="relative mt-3 mb-5">
-                        <InputText
-                          label="Your Message"
-                          name="contact_message"
-                          type="text"
-                          disabled={mutation.isPending}
-                        />
-                        <div className="">
-                          <button
-                            className="btn btn--blue w-full"
-                            type="submit"
-                            disabled={mutation.isPending}
-                          >
-                            Send Message
-                          </button>
+                  {(props) => {
+                    return (
+                      <Form>
+                        <div className="modal-overflow">
+                          <div className="relative mt-3 mb-5">
+                            <InputText
+                              label="Full Name"
+                              name="contact_fullname"
+                              type="text"
+                              disabled={mutation.isPending}
+                            />
+                          </div>
+                          <div className="relative mt-3 mb-5">
+                            <InputText
+                              label="Email Address"
+                              name="contact_email"
+                              type="text"
+                              disabled={mutation.isPending}
+                            />
+                          </div>
+                          <div className="relative mt-3 mb-5">
+                            <InputText
+                              label="Your Message"
+                              name="contact_message"
+                              type="text"
+                              disabled={mutation.isPending}
+                            />
+                            <div className="pt-4">
+                              <button
+                                className="btn btn--blue w-full"
+                                type="submit"
+                                disabled={mutation.isPending}
+                              >
+                                Send Message
+                              </button>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  </Form>
+                      </Form>
+                    );
+                  }}
                 </Formik>
               </div>
 
