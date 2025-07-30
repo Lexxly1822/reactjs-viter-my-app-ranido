@@ -4,42 +4,14 @@ import ContactList from "./ContactList";
 import ContactTable from "./ContactTable";
 import useQueryData from "../../../../custom-hooks/useQueryData";
 import { apiVersion } from "../../../../helpers/function-general";
-import { Form, Formik } from "formik";
-import * as Yup from "yup";
-import { InputText } from "../../../../helpers/FormInputs";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { queryData } from "../../../../custom-hooks/queryData";
+import ModalDeleteContact from "./ModalDeleteContact";
+import ModalEditContact from "./ModalEditContact";
 
 const Contact = () => {
   const [isModalContact, setIsModalContact] = React.useState(false);
   const [isDeleteContact, setIsDeleteContact] = React.useState(false); // 1st
   const [itemEdit, setItemEdit] = React.useState();
   const [isTable, setIsTable] = React.useState(false); //10
-
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: (values) =>
-      queryData(
-        itemEdit
-          ? `${apiVersion}/controllers/developer/contact/contact.php?id=${itemEdit.contact_aid}`
-          : `${apiVersion}/controllers/developer/contact/contact.php
-          `,
-        itemEdit
-          ? "put" //update
-          : "post", //create
-        values
-      ),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["contact"] });
-
-      if (!data.success) {
-        window.prompt(data.error);
-      } else {
-        window.prompt(`Successfully created.`);
-        // setIsModal(false);
-      }
-    },
-  });
 
   const {
     isLoading,
@@ -52,15 +24,6 @@ const Contact = () => {
     "contact" //query key
   );
 
-  const initVal = {
-    contact_fullname: itemEdit ? itemEdit.contact_fullname : "",
-    contact_email: itemEdit ? itemEdit.contact_email : "",
-    contact_message: itemEdit ? itemEdit.contact_message : "",
-  };
-
-  const yupSchema = Yup.object({
-    contact_fullname: Yup.string().required("required"),
-  });
   console.log(isTable);
 
   const handleToggleTable = () => {
@@ -186,8 +149,8 @@ const Contact = () => {
               </ul>
             </div>
 
-            <div className="contact bg-gray-50 rounded-xl p-8 h-fit md:w-1/2">
-              <div className=" -right-[34rem] relative w-full -top-14 ">
+            <div className="contact bg-gray-50 rounded-xl w-full p-8 h-fit  relative">
+              <div className="absolute  right-8 top-0 ">
                 <div className="">
                   <button //9
                     className="flex items-center gap-2 hover:underline hover:text-primary"
@@ -207,60 +170,29 @@ const Contact = () => {
                   </button>
                 </div>
               </div>
-
-              <div className="">
-                <Formik
-                  initialValues={initVal}
-                  validationSchema={yupSchema}
-                  onSubmit={async (values, { setSubmitting, resetForm }) => {
-                    console.log(values);
-
-                    mutation.mutate(values);
-                  }}
-                >
-                  {(props) => {
-                    return (
-                      <Form>
-                        <div className="modal-overflow">
-                          <div className="relative mt-3 mb-5">
-                            <InputText
-                              label="Full Name"
-                              name="contact_fullname"
-                              type="text"
-                              disabled={mutation.isPending}
-                            />
-                          </div>
-                          <div className="relative mt-3 mb-5">
-                            <InputText
-                              label="Email Address"
-                              name="contact_email"
-                              type="text"
-                              disabled={mutation.isPending}
-                            />
-                          </div>
-                          <div className="relative mt-3 mb-5">
-                            <InputText
-                              label="Your Message"
-                              name="contact_message"
-                              type="text"
-                              disabled={mutation.isPending}
-                            />
-                            <div className="pt-4">
-                              <button
-                                className="btn btn--blue w-full"
-                                type="submit"
-                                disabled={mutation.isPending}
-                              >
-                                Send Message
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </Form>
-                    );
-                  }}
-                </Formik>
-              </div>
+              {isTable == true ? (
+                <>
+                  <ContactTable //13
+                    isLoading={isLoading}
+                    isFetching={isFetching}
+                    error={error}
+                    dataContact={dataContact}
+                    handleAdd={handleAdd}
+                    handleEdit={handleEdit}
+                    handleDelete={handleDelete}
+                  />
+                </>
+              ) : (
+                <ContactList
+                  isLoading={isLoading}
+                  isFetching={isFetching}
+                  error={error}
+                  dataContact={dataContact}
+                  handleAdd={handleAdd}
+                  handleEdit={handleEdit}
+                  handleDelete={handleDelete}
+                />
+              )}
 
               {/* <div className="relative mb-6">
                 <label>Full Name</label>
@@ -279,32 +211,10 @@ const Contact = () => {
           </div>
         </div>
         {/* 3 column //12 */}
-
-        {isTable == true ? (
-          <>
-            <ContactTable //13
-              isLoading={isLoading}
-              isFetching={isFetching}
-              error={error}
-              dataContact={dataContact}
-              handleAdd={handleAdd}
-              handleEdit={handleEdit}
-              handleDelete={handleDelete}
-            />
-          </>
-        ) : (
-          <ContactList
-            isLoading={isLoading}
-            isFetching={isFetching}
-            error={error}
-            dataContact={dataContact}
-            handleAdd={handleAdd}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        )}
       </section>
-
+      {isModalContact && (
+        <ModalEditContact setIsModal={setIsModalContact} itemEdit={itemEdit} />
+      )}
       {isDeleteContact && (
         <ModalDeleteContact
           setModalDelete={setIsDeleteContact}

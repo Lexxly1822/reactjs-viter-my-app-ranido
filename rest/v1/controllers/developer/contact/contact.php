@@ -4,7 +4,7 @@ require '../../../core/header.php';
 //use needed functions
 require '../../../core/functions.php';
 //use model 
-require '../../../models/developer/contact/contact.php';
+require '../../../models/developer/contact/Contact.php';
 //get payload 
 $body = file_get_contents("php://input");
 $data = json_decode($body, true);

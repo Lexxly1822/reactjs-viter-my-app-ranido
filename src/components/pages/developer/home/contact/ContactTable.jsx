@@ -14,19 +14,21 @@ const ContactTable = ({
     <>
       <table>
         <thead>
-          <th>#</th>
-          <th>Name</th>
-          <th>Adress</th>
-          <th>Message</th>
-          <th>Action</th>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Action</th>
+          </tr>
         </thead>
         <tbody>
           {dataContact?.data.map((item, index) => {
             return (
-              <tr>
+              <tr key={index}>
                 <td>{index + 1}.</td>
                 <td>{item.contact_fullname}</td>
-                <td>{item.contact_address}</td>
+                <td>{item.contact_email}</td>
                 <td>{item.contact_message}</td>
                 <td>
                   <div className="flex items-center justify-end mr-5 gap-x-3">

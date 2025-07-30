@@ -72,15 +72,14 @@ class Contact
             $sql .= "contact_fullname = :contact_fullname, ";
             $sql .= "contact_email = :contact_email, ";
             $sql .= "contact_message= :contact_message, ";
-
             $sql .= "contact_updated = :contact_updated ";
             $sql .= "where contact_aid = :contact_aid ";
+
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "contact_fullname" => $this->contact_fullname,
                 "contact_email" => $this->contact_email,
                 "contact_message" => $this->contact_message,
-
                 "contact_updated" => $this->contact_updated,
                 "contact_aid" => $this->contact_aid,
             ]);
@@ -98,6 +97,20 @@ class Contact
             $query = $this->connection->prepare($sql);
             $query->execute([
                 "contact_aid" => $this->contact_aid
+            ]);
+        } catch (PDOException $ex) {
+            $query = false;
+        }
+        return $query;
+    }
+    public function checkEmail() // c
+    {
+        try {
+            $sql = "select contact_email from {$this->tblContact} ";
+            $sql .= "where contact_email = :contact_email ";
+            $query = $this->connection->prepare($sql);
+            $query->execute([
+                "contact_email" => $this->contact_email
             ]);
         } catch (PDOException $ex) {
             $query = false;
