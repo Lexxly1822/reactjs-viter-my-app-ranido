@@ -1,21 +1,110 @@
 import React from "react";
 import CardServices from "../../../../partials/CardServices";
-import { FaTrash } from "react-icons/fa";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { FaPencil } from "react-icons/fa6";
+import FetchingSpinner from "../../../../partials/spinners/FetchingSpinner";
+import TableLoading from "../../../../partials/spinners/TableLoading";
+import NoData from "../../../../partials/NoData";
+import ServerError from "../../../../partials/ServerError";
+import Loadmore from "../../../../partials/Loadmore";
 
 const ServicesList = ({
-  isLoading,
-  isFetching,
-  error,
-  dataServices,
   handleAdd,
   handleEdit,
   handleDelete,
+  status,
+  isFetching,
+  result,
+  error,
+  page,
+  setPage,
+  fetchNextPage,
+  isFetchingNextPage,
+  hasNextPage,
+  ref,
 }) => {
   return (
     <>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-        {dataServices?.data.map((item, key) => {
+      <div className="relative">
+        {isFetching && status != "pending" && <FetchingSpinner />}
+        <div className="min-h-[25.5rem]  min-w-full  items-center gap-10 overflow-x-auto overflow-y-hidden flex flex-row ">
+          {(status == "pending" || result?.pages[0].data.length == 0) && (
+            <div className="text-center w-full">
+              {status == "pending" ? <TableLoading /> : <NoData />}
+            </div>
+          )}
+          {error && (
+            <div className="text-center w-full">
+              <ServerError />
+            </div>
+          )}
+          {result?.pages.map((page, key) => (
+            <React.Fragment key={key}>
+              {page?.data.map((item, key) => {
+                return (
+                  <div key={key} className="relative">
+                    <div className="bg-gray-200 min-h-80 min-w-96 rounded-md relative">
+                      <div className="p-5 flex flex-col items-center gap-3">
+                        {/* Image container */}
+                        <div className="min-w-20 min-h-20">
+                          <img
+                            src={item.web_services_image}
+                            alt={item.web_services_image}
+                          />
+                        </div>
+                        <div className="text-center">
+                          <h4>{item.web_services_name}</h4>
+                          <p>{item.web_services_description}</p>
+                        </div>
+                      </div>
+                    </div>
+                    {/* action */}
+                    <div className="absolute  -top-4 -right-0 z-10 ">
+                      <div className="flex items-center justify-end gap-x-3">
+                        {" "}
+                        <button
+                          type="button"
+                          data-tooltip="Edit"
+                          className=" tooltip"
+                          onClick={() => handleEdit(item)}
+                        >
+                          <FaPencilAlt className="size-4" />
+                        </button>
+                        <button //3
+                          type="button"
+                          data-tooltip="Delete"
+                          className=" tooltip"
+                          onClick={() => handleDelete(item)}
+                        >
+                          <FaTrash className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </React.Fragment>
+          ))}
+          <div>
+            <Loadmore
+              fetchNextPage={fetchNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage}
+              result={result?.pages[0]}
+              setPage={setPage}
+              page={page}
+              refView={ref}
+            />
+          </div>
+          {/* <div className="bg-gray-200 min-h-80 min-w-96 rounded-md"> </div>
+          <div className="bg-gray-200 min-h-80 min-w-96 rounded-md"> </div>
+          <div className="bg-gray-200 min-h-80 min-w-96 rounded-md"> </div>
+          <div className="bg-gray-200 min-h-80 min-w-96 rounded-md"> </div>
+          <div className="bg-gray-200 min-h-80 min-w-96 rounded-md"> </div> */}
+        </div>
+      </div>
+      {/* <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3"> */}
+      {/* {dataServices?.data.map((item, key) => {
           return (
             <div key={key} className="relative">
               <div className="absolute -top-5 right-3">
@@ -40,8 +129,8 @@ const ServicesList = ({
               <CardServices item={item} />
             </div>
           );
-        })}
-      </div>
+        })} */}
+      {/* </div> */}
     </>
   );
 };

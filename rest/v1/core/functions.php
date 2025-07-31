@@ -65,6 +65,46 @@ function compareName($models, $name_old, $name)
         isNameExist($models, $name);
     }
 }
+// 2222222222 -webservices
+function checkLImitId($start, $total)
+{
+    $response = new Response();
+    if ($start = '' || !is_numeric($start) || $total = '' || !is_numeric($total)) {
+        $response->setSuccess(false);
+        $error = [];
+        $error['code'] = '400';
+        $error['error'] = "Limit Id cannot be blank or must be numeric";
+        $error['success'] = false;
+        $response->setData($error);
+        $response->send();
+        exit;
+    }
+}
+
+function checkReadLimit($models)
+{
+    $query = $models->readLimit();
+    checkQuery($query, "Theres something wrong with your models. (readLimit)");
+    return $query;
+}
+
+function checkReadQuery($query, $total_result, $models_total, $models_start)
+{
+    $response = new Response();
+    $returnData = [];
+    $returnData['data'] = getResultData($query);
+    $returnData['count'] = $query->rowCount();
+    $returnData['total'] = $total_result->rowCount();
+    $returnData['per_page'] = $models_total;
+    $returnData['page'] = (int) $models_start;
+    $returnData['total_pages'] = ceil($total_result->rowCount() / $models_total);
+    $returnData['success'] = true;
+    $response->setData($returnData);
+    $response->send();
+    exit;
+}
+
+
 function isEmailExist($models, $email)
 {
     $query = $models->checkEmail();

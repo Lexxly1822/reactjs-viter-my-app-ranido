@@ -9,6 +9,9 @@ import ModalDeleteServices from "./ModalDeleteServices";
 import ServicesList from "./ServicesList";
 import { data } from "autoprefixer";
 import ServicesTable from "./ServicesTable";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { queryDataInfinite } from "../../../../custom-hooks/queryDataInfinite";
+import { useInView } from "react-intersection-observer";
 
 const Services = () => {
   const [isModalServices, setIsModalServices] = React.useState(false);
@@ -16,10 +19,14 @@ const Services = () => {
   const [itemEdit, setItemEdit] = React.useState();
   const [isTable, setIsTable] = React.useState(false); //10
 
+  const [page, setPage] = React.useState(1);
+  const { ref, Inview } = useInView(); //hhhhhh
+
+  // here
   const {
     isLoading,
-    isFetching,
-    error,
+    isFetching: isFetchingDataServices,
+    error: errorDataServices,
     data: dataServices,
   } = useQueryData(
     `${apiVersion}/controllers/developer/web-services/web-services.php`,
@@ -27,7 +34,39 @@ const Services = () => {
     "web-services" //query key
   );
 
-  
+  const {
+    data: result,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    status,
+  } = useInfiniteQuery({
+    queryKey: ["web-services"],
+    queryFn: async ({ pageParam = 1 }) =>
+      await queryDataInfinite(
+        ``, //search functionalities
+        `${apiVersion}/controllers/developer/web-services/page.php?start=${pageParam}`,
+        false,
+        {},
+        "post"
+      ),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.total) {
+        return lastPage.page + lastPage.count;
+      }
+      return;
+    },
+  });
+
+  React.useEffect(() => {
+    if (Inview) {
+      fetchNextPage();
+      setPage((prev) => prev + 1);
+    }
+  }, [Inview]);
+
   console.log(isTable);
 
   const handleToggleTable = () => {
@@ -71,7 +110,6 @@ const Services = () => {
                   type="button"
                   onClick={handleToggleTable}
                 >
-          
                   {isTable == true ? ( //15
                     <>
                       <FaList className="size-3" />
@@ -100,23 +138,36 @@ const Services = () => {
             <>
               <ServicesTable //13
                 isLoading={isLoading}
-                isFetching={isFetching}
-                error={error}
-                dataServices={dataServices}
                 handleAdd={handleAdd}
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
+                result={result}
+                error={error}
+                dataServices={dataServices}
+                fetchNextPage={fetchNextPage}
+                hasNextPage={hasNextPage}
+                isFetching={isFetching}
+                isFetchingNextPage={isFetchingNextPage}
+                status={status}
+                setPage={setPage}
+                page={page}
+                ref={ref}
               />
             </>
           ) : (
             <ServicesList
-              isLoading={isLoading}
-              isFetching={isFetching}
-              error={error}
-              dataServices={dataServices}
               handleAdd={handleAdd}
               handleEdit={handleEdit}
               handleDelete={handleDelete}
+              result={result}
+              error={error}
+              isLoading={isLoading}
+              dataServices={dataServices}
+              fetchNextPage={fetchNextPage}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              isFetching={isFetching}
+              status={status}
             />
           )}
 
